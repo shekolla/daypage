@@ -1,5 +1,5 @@
 # --- frontend build stage ----------------------------------------------
-FROM node:22-alpine AS frontend
+FROM node:26-alpine AS frontend
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN npm run build
 # --- server deps stage -------------------------------------------------
 # Debian-slim picks up better-sqlite3 prebuilt binaries reliably; alpine
 # sometimes triggers a native rebuild that needs python+make+g++.
-FROM node:22-slim AS server-deps
+FROM node:26-slim AS server-deps
 
 WORKDIR /srv
 
@@ -32,7 +32,7 @@ RUN if [ -f package-lock.json ]; then \
     fi
 
 # --- prod runtime ------------------------------------------------------
-FROM node:22-slim AS prod
+FROM node:26-slim AS prod
 
 WORKDIR /srv
 
