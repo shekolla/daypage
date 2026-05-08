@@ -1,0 +1,13 @@
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY scaffold/package.json scaffold/vite.config.js scaffold/index.html scaffold/postcss.config.js ./
+COPY scaffold/src ./src
+COPY components ./src/components
+
+RUN npm install --no-audit --no-fund --loglevel=error
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]

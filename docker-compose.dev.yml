@@ -1,0 +1,13 @@
+services:
+  tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: daypage:dev
+    container_name: daypage_dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./status_tracker.jsx:/app/src/StatusTracker.jsx:ro,Z
+      - ./lib:/app/src/lib:ro,Z
+    restart: unless-stopped

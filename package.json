@@ -1,0 +1,49 @@
+{
+  "name": "daypage",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Self-hosted daily-status tracker with priorities, sub-tasks, due dates, snooze, Insights, and Google Chat webhook posts. React + Express + SQLite.",
+  "license": "MIT",
+  "author": "Sai Kiran <shekollasaikiran@gmail.com>",
+  "homepage": "https://github.com/shekolla/daypage#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shekolla/daypage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shekolla/daypage/issues"
+  },
+  "keywords": [
+    "daily-standup",
+    "status-tracker",
+    "self-hosted",
+    "react",
+    "sqlite",
+    "google-chat",
+    "team-tools",
+    "productivity"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "build": "cp status_tracker.jsx scaffold/src/StatusTracker.jsx && rm -rf scaffold/src/lib scaffold/src/components && cp -r lib scaffold/src/lib && cp -r components scaffold/src/components && cd scaffold && npm run build"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.6.2",
+    "@vitejs/plugin-react": "^5.2.0",
+    "@vitest/coverage-v8": "^4.1.5",
+    "happy-dom": "^20.9.0",
+    "lucide-react": "^1.14.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "supertest": "^7.2.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

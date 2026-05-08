@@ -1,0 +1,56 @@
+services:
+  tracker:
+    build:
+      context: .
+      target: prod
+    image: daypage:latest
+    container_name: daypage
+    ports:
+      - "8384:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_PATH=/data/tracker.db
+      - STATIC_DIR=/srv/dist
+      - BOOTSTRAP_ADMIN_USER=${BOOTSTRAP_ADMIN_USER:-}
+      - BOOTSTRAP_ADMIN_PASS=${BOOTSTRAP_ADMIN_PASS:-}
+      - SESSION_SECRET=${SESSION_SECRET:-}
+      - COOKIE_SECURE=${COOKIE_SECURE:-false}
+      - TRUST_PROXY_HOPS=${TRUST_PROXY_HOPS:-0}
+      # Container timezone — affects server cron + log timestamps. Each team
+      # can override via Settings → Timezone (settings.tz). Set to your
+      # local zone here so the unset/default case Just Works.
+      - TZ=${TZ:-Asia/Kolkata}
+    volumes:
+      - tracker-data:/data
+    restart: unless-stopped
+    stop_grace_period: 15s
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+        reservations:
+          memory: 64M
+
+volumes:
+  tracker-data:
+    driver: local
