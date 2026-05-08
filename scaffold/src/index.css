@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Source globs — Tailwind 4 auto-discovers most files but explicit @source
+   makes the JIT pickup deterministic for the bind-mounted dev container. */
+@source "../index.html";
+@source "./**/*.{js,jsx}";
+
+/* Tailwind 4 changed the default `border` color from gray-200 to
+   currentColor. Restore the v3 behavior so existing utility class strings
+   like `border` (without an explicit color) keep rendering a neutral
+   stone-200 line. */
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--color-stone-200);
+  }
+}
