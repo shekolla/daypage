@@ -41,10 +41,12 @@ RUN mkdir -p /data \
  && chown -R node:node /data /srv
 
 COPY --chown=node:node --from=frontend /app/dist /srv/dist
-COPY --chown=node:node --from=server-deps /srv/node_modules /srv/node_modules
-COPY --chown=node:node server/server.js /srv/server.js
-COPY --chown=node:node server/package.json /srv/package.json
-COPY --chown=node:node server/scripts /srv/scripts
+COPY --chown=node:node --from=server-deps /srv/node_modules /srv/server/node_modules
+COPY --chown=node:node server/server.js /srv/server/server.js
+COPY --chown=node:node server/notify.js /srv/server/notify.js
+COPY --chown=node:node server/package.json /srv/server/package.json
+COPY --chown=node:node server/scripts /srv/server/scripts
+COPY --chown=node:node lib /srv/lib
 
 USER node
 
@@ -58,4 +60,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-CMD ["node", "server.js"]
+CMD ["node", "server/server.js"]
