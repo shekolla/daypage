@@ -1,0 +1,66 @@
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/dependabot.yml"
+          - ".github/labeler.yml"
+          - ".github/release-drafter.yml"
+
+docker:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "Dockerfile"
+          - "Dockerfile.*"
+          - "docker-compose*.yml"
+          - ".dockerignore"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+          - "LICENSE"
+
+server:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "server/**"
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "status_tracker.jsx"
+          - "components/**"
+          - "lib/**"
+          - "scaffold/**"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**"
+          - "server/tests/**"
+          - "vitest.config.js"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
+          - "**/package.json"
+          - "**/package-lock.json"
+
+build:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "scaffold/vite.config.*"
+          - "scaffold/postcss.config.*"
+          - "scripts/**"
+          - "tsconfig.json"
+
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "SECURITY.md"
+          - ".github/workflows/codeql.yml"
+          - ".github/workflows/scorecard.yml"
+          - ".github/workflows/trivy.yml"

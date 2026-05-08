@@ -29,5 +29,24 @@ export default defineConfig({
         },
       },
     ],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      reportsDirectory: "./coverage",
+      include: [
+        "lib/**",
+        "components/**",
+        "server/**/*.js",
+        "status_tracker.jsx",
+      ],
+      exclude: [
+        "**/node_modules/**",
+        "**/dist/**",
+        "tests/**",
+        "server/tests/**",
+        "scaffold/**",
+        "**/*.test.{js,jsx}",
+      ],
+    },
   },
 });

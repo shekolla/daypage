@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose a new capability or change
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read [CONTRIBUTING.md](../CONTRIBUTING.md) first — the project is opinionated about scope. Bar is "would I want this on by default in my own daily use?"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What hurts today? Skip if this is a clean greenfield ask.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What would the change look like?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds, other tools, or simpler approaches you ruled out.
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: I read CONTRIBUTING.md "What we won't merge"
+          required: true
+        - label: This doesn't add a state library, markdown lib, or direct frontend Chat POSTs
+          required: true

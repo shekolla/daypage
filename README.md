@@ -1,9 +1,13 @@
 # daypage
 
 [![CI](https://github.com/shekolla/daypage/actions/workflows/ci.yml/badge.svg)](https://github.com/shekolla/daypage/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/shekolla/daypage/actions/workflows/codeql.yml/badge.svg)](https://github.com/shekolla/daypage/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/shekolla/daypage/badge)](https://scorecard.dev/viewer/?uri=github.com/shekolla/daypage)
+[![codecov](https://codecov.io/gh/shekolla/daypage/branch/main/graph/badge.svg)](https://codecov.io/gh/shekolla/daypage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Container](https://img.shields.io/badge/ghcr.io-daypage-blue?logo=docker)](https://github.com/shekolla/daypage/pkgs/container/daypage)
 [![Node](https://img.shields.io/badge/node-22%20LTS-43853d?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Codespaces-Open-181717?logo=github)](https://codespaces.new/shekolla/daypage)
 
 A self-hosted daily-status tracker. Numbered priorities → sub-tasks → date-stamped notes, modeled on the "Daily Status Summary" Slides format you'd otherwise maintain by hand. React + Express + SQLite, single user with multi-team support, runs in one ~250 MB Docker container.
 
@@ -361,14 +365,14 @@ the relevant code paths.
 
 ```bash
 npm install            # at repo root
-npm test               # vitest: 191+ unit + server + render tests
+npm test               # vitest: 225+ unit + server + render tests
 npm run typecheck      # tsc --noEmit on the server (JSDoc)
-npm run test:coverage  # v8 coverage summary
+npm run test:coverage  # v8 coverage (lcov + html in ./coverage)
 ```
 
 The unit tests cover the pure helpers in `lib/` (markdown render, migrate, diff, sort, snapshot, priority, insights, export). The render tests mount the full `<StatusTracker>` via `tests/render.test.jsx` to catch out-of-scope variable bugs in any tab/view. The server tests use Supertest + an in-memory SQLite per test against the `createApp({ db, sessionSecret, ... })` factory in `server/server.js` — covering login + rate-limit, session cookie, per-user `/api/state` isolation, the chat-proxy allowlist + 5s min-interval, and the JSON 404 fallthrough on `/api/*`.
 
-CI (GitHub Actions, `.github/workflows/ci.yml`) runs install → typecheck → tests → scaffold build on every push and PR.
+CI runs the full matrix on every push and PR — typecheck, tests with coverage upload to [Codecov](https://codecov.io/gh/shekolla/daypage), and `npm run build`. See [Contributing & community](#contributing--community) below for the full list of automated checks (CodeQL, Trivy, OpenSSF Scorecard, etc.).
 
 ---
 
@@ -406,4 +410,66 @@ scaffold/                 Minimal Vite + React + Tailwind harness
 .dockerignore             Keeps the build context lean
 CLAUDE.md                 Notes for AI assistants editing this repo
 README.md                 This file
+
+LICENSE                   MIT — see file
+CONTRIBUTING.md           How to contribute (scope, commit style, tests)
+CODE_OF_CONDUCT.md        Contributor Covenant — community standards
+SECURITY.md               Private vulnerability reporting
+CHANGELOG.md              Keep-a-Changelog (release-drafter handles per-tag notes)
+.editorconfig             Editor formatting rules
+.gitattributes            Line endings + binary / generated markers
+.devcontainer/            GitHub Codespaces config (one-click dev env)
+.github/                  Issue + PR templates, dependabot, FUNDING, workflows
 ```
+
+---
+
+## Contributing & community
+
+Pull requests welcome. Before sending one:
+
+- Read [CONTRIBUTING.md](./CONTRIBUTING.md) — what's in scope, commit style (`[Tag] message`), and how to run the test matrix.
+- Be respectful — this project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md).
+- Found a security issue? Don't open a public issue — see [SECURITY.md](./SECURITY.md) for private disclosure via GitHub Security Advisories.
+- Bigger changes? Start a [Discussion](https://github.com/shekolla/daypage/discussions) first so we can talk scope.
+
+Issue and PR templates auto-load when you open a new one. User-visible changes are tracked in [CHANGELOG.md](./CHANGELOG.md); auto-drafted notes for the next release live on the [Releases](https://github.com/shekolla/daypage/releases) page.
+
+### One-click dev environment (free for OSS)
+
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Codespaces-Open-181717?logo=github)](https://codespaces.new/shekolla/daypage)
+
+A `.devcontainer/devcontainer.json` is checked in. Click the badge above (or **Code → Codespaces → Create codespace** in the GitHub UI) and you get Node 22, Docker-in-Docker, the GitHub CLI, the right VS Code extensions, and `npm install` already run for the root, `scaffold/`, and `server/` workspaces. Public-repo accounts get 60 free Codespaces hours / month.
+
+### Automated checks on every PR
+
+| Workflow | What it catches |
+| --- | --- |
+| `ci.yml` | Typecheck (`tsc --noEmit`), 225+ Vitest tests (unit + server + render), `npm run build`. Coverage uploaded to [Codecov](https://codecov.io/gh/shekolla/daypage). |
+| `codeql.yml` | Static security analysis for JavaScript / TypeScript (security-and-quality query suite). |
+| `scorecard.yml` | OpenSSF Scorecard — repo-level supply-chain hygiene score, published at [scorecard.dev](https://scorecard.dev/viewer/?uri=github.com/shekolla/daypage). |
+| `trivy.yml` | Filesystem + Dockerfile / IaC vulnerability scan; SARIF results land in the GitHub **Security** tab. |
+| `labeler.yml` | Auto-labels PRs (`frontend` / `server` / `docker` / `documentation` / `tests` / `ci` / `dependencies` / …) by changed paths. |
+| `release-drafter.yml` | Continuously drafts the next release's notes from merged-PR titles, grouped by label. |
+| `stale.yml` | Bumps issues idle 60d / PRs idle 45d, closes after another 14d unless labelled `pinned`, `security`, `help-wanted`, or `work-in-progress`. |
+| `dependabot.yml` | Weekly bumps for npm (root + scaffold + server), GitHub Actions, and Docker base images. Dev-deps grouped to keep the PR noise down. |
+
+### Releases & supply-chain hardening
+
+Cut a release with `git tag vX.Y.Z && git push origin vX.Y.Z`. `release.yml` will then:
+
+1. Build a multi-arch (`linux/amd64`, `linux/arm64`) image and push it to **GHCR** as `ghcr.io/shekolla/daypage:vX.Y.Z`, `:X.Y`, and `:latest`.
+2. Attach **SLSA build provenance** + an **SBOM attestation** to the image (Buildx `provenance: mode=max`, `sbom: true`).
+3. **Sign every pushed tag with Sigstore / cosign** keyless via GitHub OIDC — no long-lived keys to rotate. Anyone pulling the image can verify it:
+
+   ```bash
+   cosign verify ghcr.io/shekolla/daypage:vX.Y.Z \
+     --certificate-identity-regexp 'https://github.com/shekolla/daypage/.github/workflows/release.yml@.*' \
+     --certificate-oidc-issuer https://token.actions.githubusercontent.com
+   ```
+4. Generate a separate SPDX SBOM of the source tree and attach it as an asset on the GitHub Release.
+
+### Editor / formatting conventions
+
+- `.editorconfig` — LF line endings, UTF-8, 2-space indent. Respected by every editor that implements [EditorConfig](https://editorconfig.org/).
+- `.gitattributes` — line-ending normalization, binary asset markers, lockfiles flagged `-diff linguist-generated=true` so diffs and `git blame` stay readable.

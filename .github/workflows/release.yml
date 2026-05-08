@@ -20,8 +20,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   packages: write
+  id-token: write
+  attestations: write
 
 jobs:
   publish:
@@ -54,6 +56,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push image (linux/amd64, linux/arm64)
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -64,3 +67,34 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign image with cosign (keyless via OIDC)
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          set -euo pipefail
+          for tag in $TAGS; do
+            echo "Signing ${tag}@${DIGEST}"
+            cosign sign --yes "${tag}@${DIGEST}"
+          done
+
+      - name: Generate SPDX SBOM (source)
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: spdx-json
+          artifact-name: daypage-source-sbom.spdx.json
+          output-file: daypage-source-sbom.spdx.json
+
+      - name: Attach SBOM to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: daypage-source-sbom.spdx.json
+          fail_on_unmatched_files: false
+          token: ${{ secrets.GITHUB_TOKEN }}

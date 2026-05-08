@@ -1,0 +1,77 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Please include enough detail to reproduce.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences on what's broken.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Numbered steps from a fresh state. Include sample input where relevant.
+      placeholder: |
+        1. Run `docker compose up -d --build`
+        2. Open http://localhost:8384, log in
+        3. Click X
+        4. Observe Y
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error text verbatim. Screenshots welcome.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: daypage version / commit
+      placeholder: "v1.2.0 or commit sha"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Deployment
+      options:
+        - Docker (compose)
+        - Docker (manual)
+        - Local dev (npm)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / OS
+      placeholder: "Chrome 130 on macOS 15"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Server logs, browser console errors, etc. Redact secrets.
+      render: shell

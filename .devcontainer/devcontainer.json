@@ -1,0 +1,37 @@
+{
+  "name": "daypage",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "forwardPorts": [8384, 5173],
+  "portsAttributes": {
+    "8384": { "label": "daypage (prod container)", "onAutoForward": "notify" },
+    "5173": { "label": "Vite dev server", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "npm install --no-audit --no-fund && (cd scaffold && npm install --no-audit --no-fund) && (cd server && npm install --no-audit --no-fund)",
+  "postAttachCommand": "git config --local commit.gpgsign false || true",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer",
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-docker",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        "editor.formatOnSave": false,
+        "files.eol": "\n",
+        "javascript.preferences.importModuleSpecifier": "relative"
+      }
+    }
+  },
+  "remoteUser": "node",
+  "containerEnv": {
+    "NODE_ENV": "development"
+  }
+}
