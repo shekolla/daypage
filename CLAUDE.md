@@ -272,7 +272,7 @@ Last-write-wins per user. When changing the save path:
 - No backend / sync / cloud code without explicit ask. Backups via host cron, not in-app.
 - No emojis in source files. Diff-text intentionally uses `🚨 ➕ 🔄 ➖` because they render in Chat — keep those.
 - No `git push --force`, `--no-verify`, or `git rebase -i` without explicit instruction.
-- No `Co-Authored-By: Claude` trailers on commits. Commit author for THIS repo is **Sai Kiran** (`shekollasaikiran@gmail.com`) — set as repo-local git config since this is a personal OSS project under github.com/shekolla; the user's work identity (`saikiran@dexur.com`) stays default for other repos.
+- No `Co-Authored-By: Claude` trailers on commits. Commit author for THIS repo is **Sai Kiran Shekolla** (`shekollasaikiran@gmail.com`) — set as repo-local git config since this is a personal OSS project under github.com/shekolla; the user's work identity (`saikiran@dexur.com`) stays default for other repos.
 - Don't switch the markdown subset to a library or contenteditable without explicit ask — the hand-rolled version keeps the bundle small + the auditable HTML surface tiny.
 
 ---
@@ -294,7 +294,7 @@ CSP: `connect-src 'self'`, `img-src 'self' data:`, allowlist for Google Fonts. A
 ## Cross-tool conventions
 
 - Commit style: `[Tag] message`. Tag from the touched area (`[Tracker]`, `[Server]`, `[Docs]`, `[Tests]`, `[Build]`, `[Refactor]`, etc.). One-line imperative subject. No body unless it actually adds something.
-- Author: **Sai Kiran** `shekollasaikiran@gmail.com` (repo-local; verify with `git config user.email`). Don't add `Co-Authored-By: Claude` trailers.
+- Author: **Sai Kiran Shekolla** `shekollasaikiran@gmail.com` (repo-local; verify with `git config user.email`). Don't add `Co-Authored-By: Claude` trailers.
 - Auto mode active in this repo means execute, don't over-plan. Plan mode is for big architecture changes only.
 - User prefers terse responses. Push back when you disagree — silent compliance is unhelpful. State results + decisions, don't narrate deliberation.
 - Token-efficient context: this CLAUDE.md is the index. Use grep/read to dive deeper. Don't dump file contents into chat unless asked.

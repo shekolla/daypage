@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Self-hosted daily-status tracker with priorities, sub-tasks, due dates, snooze, Insights, and Google Chat webhook posts. React + Express + SQLite.",
   "license": "MIT",
-  "author": "Sai Kiran <shekollasaikiran@gmail.com>",
+  "author": "Sai Kiran Shekolla <shekollasaikiran@gmail.com>",
   "homepage": "https://github.com/shekolla/daypage#readme",
   "repository": {
     "type": "git",
