@@ -71,17 +71,17 @@ After bootstrap, create / list / delete / re-password users with the bundled CLI
 
 ```bash
 # interactive (hidden prompt — recommended)
-docker compose exec -it tracker node scripts/users.js create alice
+docker compose exec -it tracker node server/scripts/users.js create alice
 
 # automation: pipe the password on stdin so it never lands in shell history
 # or in the host process listing
 read -rs PASSWORD
-echo "$PASSWORD" | docker compose exec -T tracker node scripts/users.js create alice
+echo "$PASSWORD" | docker compose exec -T tracker node server/scripts/users.js create alice
 unset PASSWORD
 
-docker compose exec tracker node scripts/users.js list
-docker compose exec -it tracker node scripts/users.js passwd alice
-docker compose exec    tracker node scripts/users.js delete alice    # also wipes their state
+docker compose exec tracker node server/scripts/users.js list
+docker compose exec -it tracker node server/scripts/users.js passwd alice
+docker compose exec    tracker node server/scripts/users.js delete alice    # also wipes their state
 ```
 
 > **Never** type the password as a positional argument or as an
