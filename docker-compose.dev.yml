@@ -10,4 +10,5 @@ services:
     volumes:
       - ./status_tracker.jsx:/app/src/StatusTracker.jsx:ro,Z
       - ./lib:/app/src/lib:ro,Z
+      - ./components:/app/src/components:ro,Z
     restart: unless-stopped

@@ -32,6 +32,8 @@ docker compose up -d
 # open http://localhost:8384  →  login form
 ```
 
+Default host port is `8384`. To publish on a different port (e.g. when 8384 is taken), set `HOST_PORT=9000` in `.env` and `docker compose up -d` again.
+
 Or run the prebuilt image without cloning (released on each tag):
 
 ```bash

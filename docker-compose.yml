@@ -6,12 +6,12 @@ services:
     image: daypage:latest
     container_name: daypage
     ports:
-      - "8384:3000"
+      - "${HOST_PORT:-8384}:${PORT:-3000}"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - DB_PATH=/data/tracker.db
-      - STATIC_DIR=/srv/dist
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3000}
+      - DB_PATH=${DB_PATH:-/data/tracker.db}
+      - STATIC_DIR=${STATIC_DIR:-/srv/dist}
       - BOOTSTRAP_ADMIN_USER=${BOOTSTRAP_ADMIN_USER:-}
       - BOOTSTRAP_ADMIN_PASS=${BOOTSTRAP_ADMIN_PASS:-}
       - SESSION_SECRET=${SESSION_SECRET:-}
