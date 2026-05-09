@@ -105,4 +105,24 @@ describe("buildDiffText", () => {
     expect(text).toMatch(/STATUS — PRIORITIES/);
     expect(text).toMatch(/STATUS — SUB-TASKS/);
   });
+
+  it("includes NEW SUB-TASKS heading when sub-tasks are added", () => {
+    const prev = [mkPriority("p", { items: [] })];
+    const cur  = [mkPriority("p", { items: [{ id: "i1", title: "new task", status: "not_started" }] })];
+    const text = buildDiffText(diffPriorities(prev, cur));
+    expect(text).toMatch(/NEW SUB-TASKS/);
+    expect(text).toContain("new task");
+  });
+
+  it("includes REMOVED heading when priorities or sub-tasks are deleted", () => {
+    const prev = [
+      mkPriority("p", { items: [{ id: "i1", title: "old sub", status: "wip" }] }),
+      mkPriority("q"),
+    ];
+    const cur = [mkPriority("p", { items: [] })];
+    const text = buildDiffText(diffPriorities(prev, cur));
+    expect(text).toMatch(/REMOVED/);
+    expect(text).toContain("q");
+    expect(text).toContain("old sub");
+  });
 });

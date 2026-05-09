@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildExport, buildMarkdownExport, exportLinkSummary } from "../lib/export.js";
+import { buildExport, buildMarkdownExport, exportLinkSummary, inferLinkLabel, inferLinkIcon } from "../lib/export.js";
 
 describe("exportLinkSummary", () => {
   it("returns empty string when no links", () => {
@@ -265,5 +265,43 @@ describe("buildMarkdownExport", () => {
     expect(md).toMatch(/^# Empty/);
     expect(md).toMatch(/^> 0 priorities · 0 sub-items/m);
     expect(md).not.toContain("## Team Priorities");
+  });
+});
+
+describe("inferLinkLabel", () => {
+  it("returns empty string for falsy input, 'link' for unparseable URLs", () => {
+    expect(inferLinkLabel(null)).toBe("");
+    expect(inferLinkLabel("")).toBe("");
+    expect(inferLinkLabel("not-a-url")).toBe("link");
+  });
+
+  it("infers google docs variants", () => {
+    expect(inferLinkLabel("https://docs.google.com/document/d/x")).toBe("doc");
+    expect(inferLinkLabel("https://docs.google.com/spreadsheets/d/x")).toBe("sheet");
+    expect(inferLinkLabel("https://docs.google.com/presentation/d/x")).toBe("deck");
+    expect(inferLinkLabel("https://docs.google.com/forms/d/x")).toBe("form");
+    expect(inferLinkLabel("https://docs.google.com/other")).toBe("doc");
+  });
+
+  it("infers drive, github, notion, slack by hostname", () => {
+    expect(inferLinkLabel("https://drive.google.com/file/x")).toBe("drive");
+    expect(inferLinkLabel("https://github.com/org/repo")).toBe("github");
+    expect(inferLinkLabel("https://notion.so/page")).toBe("notion");
+    expect(inferLinkLabel("https://app.slack.com/channel")).toBe("slack");
+  });
+
+  it("falls back to cleaned hostname for unknown hosts", () => {
+    expect(inferLinkLabel("https://www.example.com/path")).toBe("example.com");
+    expect(inferLinkLabel("https://example.com/path")).toBe("example.com");
+  });
+});
+
+describe("inferLinkIcon", () => {
+  it("returns a non-null value for all URL shapes (no throw)", () => {
+    expect(inferLinkIcon(null)).toBeDefined();
+    expect(inferLinkIcon("not-a-url")).toBeDefined();
+    expect(inferLinkIcon("https://docs.google.com/document/d/x")).toBeDefined();
+    expect(inferLinkIcon("https://github.com/org/repo")).toBeDefined();
+    expect(inferLinkIcon("https://example.com")).toBeDefined();
   });
 });
