@@ -1,0 +1,20 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto        # passes if coverage doesn't drop from last commit
+        threshold: 2%       # allow up to 2% drop before failing
+    patch:
+      default:
+        target: auto
+        threshold: 5%       # new code in a PR needs reasonable coverage
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false    # always comment on PRs, even if coverage unchanged
+
+ignore:
+  - "server/scripts/**"     # CLI tools (users.js, backup.js) — not unit-testable
+  - "lib/api.js"            # browser-only fetch/localStorage shim — mocked in tests
+  - "lib/useFocusTrap.js"   # DOM focus events — not exercised in happy-dom tests
